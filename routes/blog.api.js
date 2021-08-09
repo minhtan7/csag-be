@@ -8,6 +8,14 @@ var router = express.Router();
  * @access Public
  */
 router.get("/", blogController.getAllBlogs);
+
+/**
+ * @path GET /api/blogs/:id
+ * @description get single blog
+ * @access Public
+ */
+ router.get("/:id", blogController.getSingleBlog);
+
 /**
  * @path POST /api/blogs
  * @description create new blog
