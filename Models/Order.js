@@ -1,5 +1,5 @@
-const mogoose = require("mongoose");
-const Schema = mogoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const orderSchema = new Schema(
   {
@@ -19,6 +19,12 @@ const orderSchema = new Schema(
       type: String,
       enum: ["pending", "accept", "delivering", "receive", "done"],
     },
+    deliveryMethod: {
+      type: String,
+      required: true,
+      enum: ["pickUp", "delivery", "needShipper"],
+    },
+    images: [{ imageUrl: { type: String } }],
   },
   { timestamps: true }
 );

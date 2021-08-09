@@ -1,13 +1,26 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-const cors = require("cors");
+const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const mongoose = require("mongoose");
-var indexRouter = require("./routes/index");
-
-var app = express();
+const mongoURI = process.env.MONGODB_URI;
+const indexRouter = require("./routes/index");
+const app = express();
+// app.use(cors());
+app.use(cors({ origin: "*" }));
+/* DB connection */
+mongoose
+  .connect(mongoURI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useFindAndModify: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log(`Mongoose connected to ${mongoURI}`))
+  .catch((error) => console.log(error));
+const db = mongoose.connection;
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -15,19 +28,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
-
-/* DB Connections */
-const mongoURI = process.env.MONGODB_URI;
-mongoose
-  .connect(mongoURI, {
-    // some options to deal with deprecated warning
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log(`Mongoose connected to ${mongoURI}`))
-  .catch((err) => console.log(err));
 
 app.use("/api", indexRouter);
 
