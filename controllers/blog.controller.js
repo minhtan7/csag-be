@@ -7,6 +7,9 @@ blogController.getAllBlogs = async (req, res, next) => {
   try {
     //page, limit   /api/blogs
     let { page, limit } = req.query; //{page: undifined, limit: undefined}
+    page = parseInt(page)
+    limit = parseInt(limit)
+
     if (!page) page = 1;
     if (!limit) limit = 10;
 
@@ -34,6 +37,21 @@ blogController.getAllBlogs = async (req, res, next) => {
       null,
       "Get all blogs"
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+blogController.getSingleBlog = async (req, res, next) => {
+  try {
+    //take content from fontedn
+    const { id } = req.params;
+    console.log(id)
+    //create new blog
+    const blog = await Blog.findById(id);
+    console.log(blog)
+    //send
+    utilsHelper.sendResponse(res, 200, true, {blog}, null, "Get single blog");
   } catch (error) {
     next(error);
   }
