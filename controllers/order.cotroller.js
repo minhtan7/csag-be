@@ -1,5 +1,5 @@
 const orderController = {};
-const Item = require("../Models/Item");
+const Form = require("../Models/Form");
 const Order = require("../Models/Order");
 const User = require("../Models/User");
 
@@ -8,7 +8,7 @@ orderController.createOrder = async (req, res, next) => {
     const userId = req.userId; // From
     const toUserId = req.params.id; // To
     const shipperId = req.params.id;
-    const itemId = await Item.Item(itemId).populate("Item");
+    const itemId = await Form.findById(itemId).populate("Item");
     let { status, deliveryMethod, images } = req.body;
 
     let order = await Order({

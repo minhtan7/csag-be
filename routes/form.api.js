@@ -1,5 +1,6 @@
 const express = require("express");
-const itemController = require("../controllers/item.controller");
+const formController = require("../controllers/form.controller");
+
 const router = express.Router();
 
 /**
@@ -8,6 +9,6 @@ const router = express.Router();
  * @acces Public
  *
  */
-router.post("/", itemController.createItem);
+router.post("/", formController.createForm);
 
 module.exports = router;

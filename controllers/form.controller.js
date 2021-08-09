@@ -1,13 +1,12 @@
-const Catagory = require("../Models/Catagory");
-const Item = require("../Models/Item");
+const Form = require("../Models/Form");
 const User = require("../Models/User");
-const itemController = {};
+const formController = {};
 
-itemController.createItem = async (req, res, next) => {
+formController.createForm = async (req, res, next) => {
   try {
     let { item, status, userId } = req.body;
     userId = await User.findById(userId).populate("User");
-    let catagories = await Catagory.findById().populate("Catagory");
+
     let products = await Item.create({
       userId,
       item,
@@ -26,4 +25,4 @@ itemController.createItem = async (req, res, next) => {
   }
 };
 
-module.exports = itemController;
+module.exports = formController;
