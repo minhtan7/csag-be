@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String },
+    phone: {type: Number, require: true, unique: true},
     role: {
       type: String,
       required: true,
@@ -16,6 +17,8 @@ const userSchema = mongoose.Schema(
       enum: ["pickUp", "delivery", "needShipper"],
     },
     address: { type: String, required: true },
+    geocode: {lat:{type:Number},lng:{type:Number}},
+    city:{type: String, required: true},
     images: [{ imageUrl: { type: String } }],
   },
   { timestamps: true }
