@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+
 const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -13,11 +13,6 @@ const userSchema = mongoose.Schema(
       // required: true,
       enum: ["giver", "recipient", "shipper", "admin"],
     },
-    deliveryMethod: {
-      type: String,
-      // required: true,
-      enum: ["pickUp", "delivery", "needShipper"],
-    },
     address: { type: String, required: true },
     geocode: { lat: { type: Number }, lng: { type: Number } },
     city: { type: String, required: true },
@@ -27,7 +22,7 @@ const userSchema = mongoose.Schema(
 );
 userSchema.methods.generateToken = async function () {
   const accessToken = await jwt.sign({ _id: this._id }, JWT_SECRET_KEY, {
-    expiresIn: "7d",
+    expiresIn: "1d",
   });
   return accessToken;
 };

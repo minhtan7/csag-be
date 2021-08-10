@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const Form = require('./Models/Form');
 const User = require('./Models/User');
+const Order = require('./Models/Order');
 require('dotenv').config();
 const faker = require('faker/locale/vi');
+const bcrypt = require('bcryptjs');
 
 //constants
 const CITY = 'Ho Chi Minh City';
@@ -51,23 +53,25 @@ const generatePhone = () => {
 	return faker.random.arrayElement(STARTING_PHONE_NUM) + Math.floor(Math.random() * 10000000);
 };
 
-const generateUsers = async (num) => {
+const generateUsers = async (num, roles) => {
 	let users = [];
-	let roles = ['giver', 'recipient'];
+
 	for (let i = 0; i < num; i++) {
 		const phones = users.map((item) => item.phone);
 		const emails = users.map((item) => item.email);
 		let newPhone = phones[0] || generatePhone();
 		let newEmail = emails[0] || faker.internet.email();
-		while (phones.includes(newPhone)) {
+		while (phones.length > 0 && phones.includes(newPhone)) {
 			newPhone = generatePhone();
 		}
-		while (emails.includes(newEmail)) {
+		while (emails.length > 0 && emails.includes(newEmail)) {
 			newEmail = faker.internet.email();
 		}
+		const salt = await bcrypt.genSalt(10);
+		const password = await bcrypt.hash('123', salt);
 		users.push({
 			name: generateName(),
-			password: '123',
+			password,
 			email: newEmail,
 			role: faker.random.arrayElement(roles),
 			phone: newPhone,
@@ -76,6 +80,7 @@ const generateUsers = async (num) => {
 			city: 'Ho Chi Minh City',
 		});
 	}
+	console.log('Creating users...');
 	await Promise.all(
 		users.map(async (item) => {
 			console.log(item);
@@ -86,10 +91,13 @@ const generateUsers = async (num) => {
 };
 
 const generateData = async () => {
-	await User.collection.drop();
-	await Form.collection.drop();
-	await generateUsers(2500);
-	await generateForm(2000);
+	// await User.collection.drop();
+	await Order.collection.drop();
+	// await Form.collection.drop();
+	// await generateUsers(2500,  ['giver', 'recipient']); //no shipper
+	// await generateUsers(200, ['shipper']);
+	// await generateForm(2000);
+	await generateOrder(200);
 };
 
 const generateForm = async (num) => {
@@ -171,4 +179,40 @@ const generateItem = (num) => {
 		items.push({ category, name, quantity: faker.random.number({ min: 1, max: 5 }), unit: item.unit });
 	}
 	return items;
+};
+
+const generateOrder = async (num) => {
+	const deliveryMethods = ['recipient', 'giver', 'shipper'];
+	const statuses = ['pending', 'pickup', 'delivering', 'done'];
+	const statuses_2 = ['pending', 'done'];
+	const shippers = await User.find({ role: 'shipper' });
+	const forms = await Form.find();
+	const givers = await User.find({ role: 'giver' });
+	const recipients = await User.find({ role: 'recipient' });
+	const selectedForms = faker.random.arrayElements(forms, num);
+	await Promise.all(
+		selectedForms.map(async (item, index) => {
+			let order = {};
+			console.log('Creating order #' + (index + 1));
+			order.deliveryMethod = faker.random.arrayElement(deliveryMethods);
+			if (order.deliveryMethod === 'shipper') {
+				order.status = faker.random.arrayElement(statuses);
+			} else {
+				order.status = faker.random.arrayElement(statuses_2);
+			}
+			order.status = faker.random.arrayElement(statuses);
+			order.form = item._id;
+			if (item.type === 'give') {
+				order.from = item.userId;
+				order.to = faker.random.arrayElement(recipients);
+			} else {
+				order.to = item.userId;
+				order.from = faker.random.arrayElement(givers);
+			}
+			if (order.deliveryMethod === 'shipper' && order.status !== 'pending') {
+				order.shipperId = faker.random.arrayElement(shippers);
+			}
+			Order.create(order);
+		})
+	);
 };

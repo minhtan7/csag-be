@@ -40,8 +40,8 @@ orderController.getAllOrders = async (req, res, next) => {
     const totalOrders = await Order.count({ ...filter, isDeleted: false });
     const totalPages = Math.ceil(totalOrders / limit);
     const offset = limit * (page - 1);
-    const orders = await Order.find(filter)
-      .find(filter)
+    const orders = await Order.find({ status: "pending" })
+      .find({ status: "pending" })
       .sort({ ...sortBy, createdAt: -1 })
       .skip(offset)
       .limit(limit)
@@ -83,6 +83,37 @@ orderController.getSingleOrder = async (req, res, next) => {
     });
   }
 };
+///getOrderShipper///
+
+orderController.getShipperOrder = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const orders = await Order.find({
+      shipperId: userId,
+      status: { $nin: ["pending"] },
+    })
+      .populate("from")
+      .populate("to")
+      .populate("shipperId");
+    if (!order) {
+      throw new Error("order not found", "Get Single order Error");
+    }
+
+    order = order.toJSON();
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+      message: "Gell single orderShipper success",
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: err.message,
+    });
+  }
+};
+
 ///Updateorder.
 orderController.updateOrder = async (req, res, next) => {
   try {

@@ -1,5 +1,5 @@
 let express = require("express");
-const authMiddleware = require("../middleweares/authentication");
+const authMiddleware = require("../middlewares/authentication");
 const orderController = require("../controllers/order.controller");
 
 let router = express.Router();
@@ -9,7 +9,7 @@ let router = express.Router();
  * @description create orders
  * @access Login required
  */
-router.post("/:id", authMiddleware.loginrequired, orderController.createOrder);
+router.post("/:id", authMiddleware.loginRequired, orderController.createOrder);
 
 /**
  * @route get api/orders?page=1&limit=10
@@ -32,5 +32,11 @@ router.get("/:id", orderController.getSingleOrder);
  * @access Login required
  */
 
-router.post("/", authMiddleware.loginrequired, orderController.updateOrder);
+router.put("/", authMiddleware.loginRequired, orderController.updateOrder);
+
+router.get(
+  "/shipper/:id",
+  authMiddleware.loginRequired,
+  orderController.getShipperOrder
+);
 module.exports = router;

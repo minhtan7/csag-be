@@ -55,15 +55,15 @@ userController.getAllUsers = async (req, res, next) => {
     limit = parseInt(limit) || 10;
     const totalUsers = await User.count({
       ...filter,
-      isDeleted: false,
     });
     const totalPages = Math.ceil(totalUsers / limit);
     const offset = limit * (page - 1);
 
-    let users = await User.find(filter)
+    let users = await User.find()
       .sort({ ...sortBy, createdAt: -1 })
       .skip(offset)
       .limit(limit);
+
     res.status(200).json({
       success: true,
       data: { users, totalPages },

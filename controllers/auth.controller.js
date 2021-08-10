@@ -1,37 +1,81 @@
+const {
+  AppError,
+  catchAsync,
+  sendResponse,
+} = require("../helpers/utils.helper");
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
 const authController = {};
 
-authController.loginWithEmail = async (req, res, next) => {
-  try {
-    ///login process//
-    //1. get the email and password from body
-    const { email, password } = req.body;
+authController.loginWithEmail = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email }, "+password");
+  if (!user)
+    return next(new AppError(400, "Invalid credentials", "Login Error"));
 
-    //2. check the email exist in databaes.
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      throw new Error("This email is not exist");
-    }
-    //3. check pass is match
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      throw new Error("wrong password");
-    }
-    //4. generate token
-    const token = await user.generateToken();
+  // if (!user.emailVerified) {
+  //   return next(new AppError(406, "Please verify your email", "Login Error"));
+  // }
 
-    //5. response.
-    res.status(200).json({
-      success: true,
-      data: { user, token },
-    });
-  } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err.message,
-    });
-  }
-};
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return next(new AppError(400, "Wrong password", "Login Error"));
+
+  accessToken = await user.generateToken();
+  return sendResponse(
+    res,
+    200,
+    true,
+    { user, accessToken },
+    null,
+    "Login successful"
+  );
+});
+
+// authController.loginWithFacebookOrGoogle = catchAsync(
+//   async (req, res, next) => {
+//     let profile = req.user;
+//     profile.email = profile.email.toLowerCase();
+//     let user = await User.findOne({ email: profile.email });
+//     const randomPassword = "" + Math.floor(Math.random() * 10000000);
+//     const salt = await bcrypt.genSalt(10);
+//     const newPassword = await bcrypt.hash(randomPassword, salt);
+
+//     if (user) {
+//       if (!user.emailVerified) {
+//         user = await User.findByIdAndUpdate(
+//           user._id,
+//           {
+//             $set: { emailVerified: true, avatarUrl: profile.avatarUrl },
+//             $unset: { emailVerificationCode: 1 },
+//           },
+//           { new: true }
+//         );
+//       } else {
+//         user = await User.findByIdAndUpdate(
+//           user._id,
+//           { avatarUrl: profile.avatarUrl },
+//           { new: true }
+//         );
+//       }
+//     } else {
+//       user = await User.create({
+//         name: profile.name,
+//         email: profile.email,
+//         password: newPassword,
+//         avatarUrl: profile.avatarUrl,
+//       });
+//     }
+
+//     const accessToken = await user.generateToken();
+//     return sendResponse(
+//       res,
+//       200,
+//       true,
+//       { user, accessToken },
+//       null,
+//       "Login successful"
+//     );
+//   }
+// );
 
 module.exports = authController;
