@@ -9,10 +9,6 @@ router.use("/auth", authApi);
 const blogApi = require("./blog.api");
 router.use("/blogs", blogApi);
 
-/* shipmentApi  */
-const shipmentApi = require("./shipment.api");
-router.use("/shipment", shipmentApi);
-
 /* userApi  */
 const userApi = require("./user.api");
 router.use("/users", userApi);

@@ -6,11 +6,14 @@ userController.register = async (req, res, next) => {
     let {
       name,
       email,
+      password,
       deliveryMethod,
       role,
       address,
       images,
-      password,
+      phone,
+      geocode,
+      city,
     } = req.body;
     let user = await User.findOne({ email });
     if (user) {
@@ -26,6 +29,9 @@ userController.register = async (req, res, next) => {
       role,
       address,
       images,
+      phone,
+      geocode,
+      city,
     });
 
     res.status(200).json({

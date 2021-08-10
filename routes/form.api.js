@@ -18,11 +18,10 @@ router.post("/", formController.createForm);
  * @acces giver
  *
  */
-router.get("/matching",authMiddleware.loginRequired, formController.matchingReceiver )
-
-
-
-
-
+// router.get(
+//   "/matching",
+//   authMiddleware.loginRequired,
+//   formController.matchingReceiver
+// );
 
 module.exports = router;
