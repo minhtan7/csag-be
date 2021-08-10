@@ -1,22 +1,23 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
 
 /* Blog */
-const blogApi = require("./blog.api");
-router.use("/blogs", blogApi);
+const blogApi = require('./blog.api');
+router.use('/blogs', blogApi);
 
 /* shipmentApi  */
-const shipmentApi = require("./shipment.api");
-router.use("/shipment", shipmentApi);
+const shipmentApi = require('./shipment.api');
+router.use('/shipment', shipmentApi);
 
 /* userApi  */
-const userApi = require("./user.api");
-router.use("/users", userApi);
+const userApi = require('./user.api');
+router.use('/users', userApi);
 
 /* formApi */
-const formApi = require("./form.api");
-router.use("/form", formApi);
+const formApi = require('./form.api');
+router.use('/form', formApi);
 
-
+const authApi = require('./auth.api');
+router.use('/auth', authApi);
 
 module.exports = router;
