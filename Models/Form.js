@@ -14,6 +14,13 @@ const formSchema = new Schema(
         },
       },
     ],
+    categories: [
+      {
+        type: String,
+        enum: ["food", "household", "medical"],
+        required: true,
+      },
+    ],
 
     type: { type: String, enum: ["give", "need"] },
     status: { type: String, enum: ["ongoing", "done"] },
