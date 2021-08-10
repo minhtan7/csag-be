@@ -33,4 +33,10 @@ router.get("/:id", orderController.getSingleOrder);
  */
 
 router.put("/", authMiddleware.loginRequired, orderController.updateOrder);
+
+router.get(
+  "/shipper/:id",
+  authMiddleware.loginRequired,
+  orderController.getShipperOrder
+);
 module.exports = router;
