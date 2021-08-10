@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 // const passport = require("passport");
@@ -11,7 +10,6 @@ const authController = require('../controllers/auth.controller');
  * @description Login
  * @access Public
  */
-router.post('/login', validators.validate([body('email', 'Invalid email').exists().isEmail(), body('password', 'Invalid password').exists().notEmpty()]), authController.loginWithEmail);
-
+router.post('/login', authController.loginWithEmailorPhone);
 
 module.exports = router;
