@@ -3,8 +3,18 @@ const userController = {};
 const bcrypt = require("bcrypt");
 userController.register = async (req, res, next) => {
   try {
-    let { name, email, deliveryMethod, role, address, images, password } =
-      req.body;
+    let {
+      name,
+      email,
+      password,
+      deliveryMethod,
+      role,
+      address,
+      images,
+      phone,
+      geocode,
+      city,
+    } = req.body;
     let user = await User.findOne({ email });
     if (user) {
       throw new Error("Email already exists");
@@ -19,6 +29,9 @@ userController.register = async (req, res, next) => {
       role,
       address,
       images,
+      phone,
+      geocode,
+      city,
     });
 
     res.status(200).json({

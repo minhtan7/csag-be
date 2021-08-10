@@ -70,7 +70,7 @@ orderController.getSingleOrder = async (req, res, next) => {
     }
 
     order = order.toJSON();
-    console.log("ordersigle", order);
+
     res.status(200).json({
       success: true,
       data: order,

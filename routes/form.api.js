@@ -1,6 +1,6 @@
 const express = require("express");
 const formController = require("../controllers/form.controller");
-const authMiddleware = require("../middlewares/authentication");
+const authMiddleware = require("../middleweares/authentication");
 
 const router = express.Router();
 
@@ -18,11 +18,10 @@ router.post("/", formController.createForm);
  * @acces giver
  *
  */
-router.get("/matching",authMiddleware.loginRequired, formController.matchingReceiver )
-
-
-
-
-
+// router.get(
+//   "/matching",
+//   authMiddleware.loginRequired,
+//   formController.matchingReceiver
+// );
 
 module.exports = router;
