@@ -4,16 +4,16 @@ const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, unique: true },
-    password: { type: String },
-    phone: { type: Number, require: true, unique: true },
+    password: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
     role: {
       type: String,
-      required: true,
+      // required: true,
       enum: ["giver", "recipient", "shipper", "admin"],
     },
     deliveryMethod: {
       type: String,
-      required: true,
+      // required: true,
       enum: ["pickUp", "delivery", "needShipper"],
     },
     address: { type: String, required: true },
