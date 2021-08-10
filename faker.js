@@ -3,6 +3,7 @@ const Form = require('./Models/Form');
 const User = require('./Models/User');
 require('dotenv').config();
 const faker = require('faker/locale/vi');
+const bcrypt = require('bcryptjs');
 
 //constants
 const CITY = 'Ho Chi Minh City';
@@ -59,15 +60,17 @@ const generateUsers = async (num) => {
 		const emails = users.map((item) => item.email);
 		let newPhone = phones[0] || generatePhone();
 		let newEmail = emails[0] || faker.internet.email();
-		while (phones.includes(newPhone)) {
+		while (phones.length > 0 && phones.includes(newPhone)) {
 			newPhone = generatePhone();
 		}
-		while (emails.includes(newEmail)) {
+		while (emails.length > 0 && emails.includes(newEmail)) {
 			newEmail = faker.internet.email();
 		}
+		const salt = await bcrypt.genSalt(10);
+		const password = await bcrypt.hash('123', salt);
 		users.push({
 			name: generateName(),
-			password: '123',
+			password,
 			email: newEmail,
 			role: faker.random.arrayElement(roles),
 			phone: newPhone,
@@ -76,6 +79,7 @@ const generateUsers = async (num) => {
 			city: 'Ho Chi Minh City',
 		});
 	}
+	console.log('Creating users...');
 	await Promise.all(
 		users.map(async (item) => {
 			console.log(item);
@@ -86,8 +90,8 @@ const generateUsers = async (num) => {
 };
 
 const generateData = async () => {
-	await User.collection.drop();
-	await Form.collection.drop();
+	// await User.collection.drop();
+	// await Form.collection.drop();
 	await generateUsers(2500);
 	await generateForm(2000);
 };
