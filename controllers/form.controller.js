@@ -5,13 +5,14 @@ const formController = {};
 
 formController.createForm = async (req, res, next) => {
   try {
-    let { item, status, userId } = req.body;
-    userId = await User.findById(userId).populate("User");
+    const userId = req.userId;
+    let { items, status, type } = req.body;
 
-    let products = await Item.create({
-      userId,
-      item,
+    let products = await Form.create({
+      userId: userId,
+      items,
       status,
+      type,
     });
     res.status(200).json({
       success: true,
