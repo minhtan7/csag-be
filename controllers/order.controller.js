@@ -6,8 +6,7 @@ const User = require("../Models/User");
 orderController.createOrder = async (req, res, next) => {
   try {
     const userId = req.userId; // From
-    const toUserId = req.params.id; // To
-    let { deliveryMethod, images, items } = req.body;
+    let { deliveryMethod, images, items, toUserId } = req.body;
 
     let order = await Order.create({
       from: userId,

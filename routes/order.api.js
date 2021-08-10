@@ -5,11 +5,11 @@ const orderController = require("../controllers/order.controller");
 let router = express.Router();
 
 /**
- * @route Post api/orders/:userId
+ * @route Post api/orders/:id
  * @description create orders
  * @access Login required
  */
-router.post("/:id", authMiddleware.loginRequired, orderController.createOrder);
+router.post("/", authMiddleware.loginRequired, orderController.createOrder);
 
 /**
  * @route get api/orders?page=1&limit=10

@@ -10,7 +10,7 @@ const router = express.Router();
  * @acces Public
  *
  */
-router.post("/", formController.createForm);
+router.post("/", authMiddleware.loginRequired, formController.createForm);
 
 /**
  * @route GET api/form/matching
@@ -18,11 +18,17 @@ router.post("/", formController.createForm);
  * @acces giver
  *
  */
-router.get("/matching",authMiddleware.loginRequired, formController.matchingReceiver )
-
-
-
-
-
+router.get(
+  "/matching/:id",
+  authMiddleware.loginRequired,
+  formController.matchingReceiver
+);
+/**
+ * @route GET api/form/:id
+ * @description get form by id
+ * @acces giver
+ *
+ */
+router.get("/:id", authMiddleware.loginRequired, formController.getSingleForm);
 
 module.exports = router;
