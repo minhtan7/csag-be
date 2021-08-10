@@ -57,6 +57,7 @@ userController.getAllUsers = async (req, res, next) => {
       .sort({ ...sortBy, createdAt: -1 })
       .skip(offset)
       .limit(limit);
+
     res.status(200).json({
       success: true,
       data: { users, totalPages },

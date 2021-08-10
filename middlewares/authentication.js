@@ -1,35 +1,31 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-<<<<<<< HEAD
 const User = require("../Models/User");
 const Order = require("../Models/Order");
-=======
-const User = require('../Models/User');
->>>>>>> ffc617d4f19cdb2c9fa86232812ea3ab638f87e4
 
 const authMiddleware = {};
 
 authMiddleware.loginRequired = (req, res, next) => {
-	try {
-		const tokenString = req.headers.authorization;
-		if (!tokenString) return next(new Error('401 - Access Token required'));
-		const token = tokenString.replace('Bearer ', '');
+  try {
+    const tokenString = req.headers.authorization;
+    if (!tokenString) return next(new Error("401 - Access Token required"));
+    const token = tokenString.replace("Bearer ", "");
 
-		jwt.verify(token, JWT_SECRET_KEY, (err, payload) => {
-			if (err) {
-				if (err.name === 'TokenExpiredError') {
-					return next(new Error('401 - Token expired'));
-				} else {
-					return next(new Error('401 - Token is invalid'));
-				}
-			}
+    jwt.verify(token, JWT_SECRET_KEY, (err, payload) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return next(new Error("401 - Token expired"));
+        } else {
+          return next(new Error("401 - Token is invalid"));
+        }
+      }
 
-			req.userId = payload._id;
-		});
-		next();
-	} catch (error) {
-		next(error);
-	}
+      req.userId = payload._id;
+    });
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
 
 // authMiddleware.adminRequired = async (req, res, next) => {
