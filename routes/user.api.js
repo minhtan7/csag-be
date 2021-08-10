@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user.controller');
-
+const authMiddleware = require('../middlewares/authentication');
 /**
  * @route POST api/users
  * @description User register account
@@ -18,6 +18,6 @@ router.post('/', userController.register);
  */
 router.get('/', userController.getAllUsers);
 
-router.get('/me', userController.getCurrentUser);
+router.get('/me', authMiddleware.loginRequired, userController.getCurrentUser);
 
 module.exports = router;
