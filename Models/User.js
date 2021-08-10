@@ -20,6 +20,14 @@ const userSchema = mongoose.Schema(
 	},
 	{ timestamps: true }
 );
+
+userSchema.methods.toJSON = function () {
+	const obj = this._doc;
+	delete obj.password;
+	delete obj.isDeleted;
+	return obj;
+};
+
 userSchema.methods.generateToken = async function () {
 	const accessToken = await jwt.sign({ _id: this._id }, JWT_SECRET_KEY, {
 		expiresIn: '3d',
