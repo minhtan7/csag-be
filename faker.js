@@ -92,6 +92,7 @@ const generateUsers = async (num, roles) => {
 
 const generateData = async () => {
 	// await User.collection.drop();
+	await Order.collection.drop();
 	// await Form.collection.drop();
 	// await generateUsers(2500,  ['giver', 'recipient']); //no shipper
 	// await generateUsers(200, ['shipper']);
@@ -181,8 +182,9 @@ const generateItem = (num) => {
 };
 
 const generateOrder = async (num) => {
-	const deliveryMethods = ['pickup', 'delivery', 'need_shipper'];
+	const deliveryMethods = ['recipient', 'giver', 'shipper'];
 	const statuses = ['pending', 'pickup', 'delivering', 'done'];
+	const statuses_2 = ['pending', 'done'];
 	const shippers = await User.find({ role: 'shipper' });
 	const forms = await Form.find();
 	const givers = await User.find({ role: 'giver' });
@@ -193,6 +195,11 @@ const generateOrder = async (num) => {
 			let order = {};
 			console.log('Creating order #' + (index + 1));
 			order.deliveryMethod = faker.random.arrayElement(deliveryMethods);
+			if (order.deliveryMethod === 'shipper') {
+				order.status = faker.random.arrayElement(statuses);
+			} else {
+				order.status = faker.random.arrayElement(statuses_2);
+			}
 			order.status = faker.random.arrayElement(statuses);
 			order.form = item._id;
 			if (item.type === 'give') {
@@ -202,7 +209,7 @@ const generateOrder = async (num) => {
 				order.to = item.userId;
 				order.from = faker.random.arrayElement(givers);
 			}
-			if (order.status !== 'pending') {
+			if (order.deliveryMethod === 'shipper' && order.status !== 'pending') {
 				order.shipperId = faker.random.arrayElement(shippers);
 			}
 			Order.create(order);

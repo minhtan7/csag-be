@@ -18,7 +18,7 @@ const orderSchema = new Schema(
 		deliveryMethod: {
 			type: String,
 			required: true,
-			enum: ['pickup', 'delivery', 'need_shipper'],
+			enum: ['recipient', 'giver', 'shipper'],
 		},
 		images: [{ type: String }],
 	},
