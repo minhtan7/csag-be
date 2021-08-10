@@ -7,24 +7,32 @@ const orderSchema = new Schema(
     to: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     shipperId: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "User",
     },
-    itemId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "Item",
-    },
+    items: [
+      {
+        name: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        unit: { type: String, required: true },
+        category: {
+          type: String,
+          enum: ["food", "household", "medical"],
+          required: true,
+        },
+      },
+    ],
+
     status: {
       type: String,
-      enum: ["pending", "accept", "delivering", "receive", "done"],
+      default: "pending",
+      enum: ["pending", "pickup", "delivering", "done"],
     },
     deliveryMethod: {
       type: String,
       required: true,
       enum: ["pickUp", "delivery", "needShipper"],
     },
-    images: [{ imageUrl: { type: String } }],
+    images: [{ type: String }],
   },
   { timestamps: true }
 );

@@ -1,6 +1,10 @@
 var express = require("express");
 var router = express.Router();
 
+//// authApi
+const authApi = require("./auth.api");
+router.use("/auth", authApi);
+
 /* Blog */
 const blogApi = require("./blog.api");
 router.use("/blogs", blogApi);
@@ -17,6 +21,10 @@ router.use("/users", userApi);
 const formApi = require("./form.api");
 router.use("/form", formApi);
 
+
+/* orderApi */
+const orderApi = require("./order.api");
+router.use("/orders", orderApi);
 
 
 module.exports = router;
