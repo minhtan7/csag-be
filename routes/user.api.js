@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const userController = require("../controllers/user.controller");
+const userController = require('../controllers/user.controller');
 
 /**
  * @route POST api/users
@@ -8,7 +8,7 @@ const userController = require("../controllers/user.controller");
  * @acces Public
  *
  */
-router.post("/", userController.register);
+router.post('/', userController.register);
 
 /**
  * @route POST api/users
@@ -16,6 +16,8 @@ router.post("/", userController.register);
  * @acces Public
  *
  */
-router.get("/", userController.getAllUsers);
+router.get('/', userController.getAllUsers);
+
+router.get('/me', userController.getCurrentUser);
 
 module.exports = router;
