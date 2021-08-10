@@ -33,11 +33,9 @@ mongoose
 	.catch((err) => console.log(err));
 
 const generateGeo = () => {
-	const randomNum = Math.floor(Math.random() * 700) / 10000 + 10.74;
-	const randomNum2 = Math.floor(Math.random() * 1000) / 10000 + 106.6;
 	return {
-		lng: randomNum2,
-		lat: randomNum,
+		lng: (Math.random() * 700) / 10000 + 10.74,
+		lat: (Math.random() * 1000) / 10000 + 106.6,
 	};
 };
 
